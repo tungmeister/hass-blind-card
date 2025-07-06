@@ -27,6 +27,14 @@ class BlindCard extends HTMLElement {
         if (entity && entity.buttons_position) {
             buttonsPosition = entity.buttons_position.toLowerCase();
         }
+
+        let showButtons = true;
+        if (typeof _this.config.show_buttons !== 'undefined') {
+            showButtons = _this.config.show_buttons;
+        }
+        if (entity && typeof entity.show_buttons !== 'undefined') {
+            showButtons = entity.show_buttons;
+        }
         
         let titlePosition = 'top';
         if (entity && entity.title_position) {
@@ -52,21 +60,26 @@ class BlindCard extends HTMLElement {
 
         blind.className = 'sc-blind';
         blind.dataset.blind = entityId;
+        let middleFlexDirection = 'row';
+        if (showButtons) {
+            middleFlexDirection = buttonsPosition == 'right' ? 'row-reverse' : 'row';
+        }
+
         blind.innerHTML = `
           <div class="sc-blind-top" ` + (titlePosition == 'bottom' ? 'style="display:none;"' : '') + `>
             <div class="sc-blind-label">
-            
+
             </div>
             <div class="sc-blind-position">
-            
+
             </div>
           </div>
-          <div class="sc-blind-middle" style="flex-direction: ` + (buttonsPosition == 'right' ? 'row-reverse': 'row') + `;">
-            <div class="sc-blind-buttons">
+          <div class="sc-blind-middle" style="flex-direction: ` + middleFlexDirection + `;">
+            ` + (showButtons ? `<div class="sc-blind-buttons">
               <ha-icon-button class="sc-blind-button" data-command="up"><ha-icon icon="mdi:arrow-up"></ha-icon></ha-icon-button><br>
               <ha-icon-button class="sc-blind-button" data-command="stop"><ha-icon icon="mdi:stop"></ha-icon></ha-icon-button><br>
               <ha-icon-button class="sc-blind-button" data-command="down"><ha-icon icon="mdi:arrow-down"></ha-icon></ha-icon-button>
-            </div>
+            </div>` : '') + `
             <div class="sc-blind-selector">
               <div class="sc-blind-selector-picture">
                 <div class="sc-blind-selector-slide"></div>
