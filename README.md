@@ -26,6 +26,7 @@ This is a fork of the Blind Card by tungmeister. I needed a option to invert the
 | title_position | string | False | `top` | Set title on `top` or on `bottom` of the blind
 | invert_percentage | boolean | False | `false` | Set it to `true` to invert the direction of the blind: 0% corresponds to open and 100% to closed
 | invert_commands | boolean | False | `false` | Set it to true if you want to invert the up/down buttons to match your motors direction
+| show_buttons | boolean | False | `true` | Set it to `false` to hide the up/stop/down control buttons
 | blind_color | string | False | 'white' | Set blind Color e.g. `green` or hex `#00FF00`
 
 _Remark : you can also just give the entity ID (without to specify `entity:`) if you don't need to specify the other configurations._
@@ -41,7 +42,8 @@ entities:
     buttons_position: left
     title_position: bottom
     blind_color: '#FFD580'
-  - cover.bedroom_blind
+  - entity: cover.bedroom_blind
+    show_buttons: false
 ```
 ![Colored Blind](https://raw.githubusercontent.com/tungmeister/hass-blind-card/master/images/colored.png)
 

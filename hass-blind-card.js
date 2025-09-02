@@ -47,6 +47,11 @@ class BlindCard extends HTMLElement {
         if (entity && entity.blind_color) {
           blindColor = entity.blind_color;
         }
+
+        let showButtons = true;
+        if (entity && entity.show_buttons !== undefined) {
+          showButtons = entity.show_buttons;
+        }
     
         let blind = document.createElement('div');
 
@@ -62,11 +67,11 @@ class BlindCard extends HTMLElement {
             </div>
           </div>
           <div class="sc-blind-middle" style="flex-direction: ` + (buttonsPosition == 'right' ? 'row-reverse': 'row') + `;">
-            <div class="sc-blind-buttons">
+            ` + (showButtons ? `<div class="sc-blind-buttons">
               <ha-icon-button class="sc-blind-button" data-command="up"><ha-icon icon="mdi:arrow-up"></ha-icon></ha-icon-button><br>
               <ha-icon-button class="sc-blind-button" data-command="stop"><ha-icon icon="mdi:stop"></ha-icon></ha-icon-button><br>
               <ha-icon-button class="sc-blind-button" data-command="down"><ha-icon icon="mdi:arrow-down"></ha-icon></ha-icon-button>
-            </div>
+            </div>` : '') + `
             <div class="sc-blind-selector">
               <div class="sc-blind-selector-picture">
                 <div class="sc-blind-selector-slide"></div>
@@ -146,31 +151,33 @@ class BlindCard extends HTMLElement {
         picker.addEventListener('pointerdown', mouseDown);
         
         //Manage click on buttons
-        blind.querySelectorAll('.sc-blind-button').forEach(function (button) {
-            button.onclick = function () {
-                const command = this.dataset.command;
-                
-                let service = '';
-                
-                switch (command) {
-                  case 'up':
-                      service = !invertCommands ? 'open_cover' : 'close_cover';
-                      break;
-                      
-                  case 'down':
-                      service = !invertCommands ? 'close_cover' : 'open_cover';
-                      break;
-                
-                  case 'stop':
-                      service = 'stop_cover';
-                      break;
-                }
-                
-                hass.callService('cover', service, {
-                  entity_id: entityId
-                });
-            };
-        });
+        if (showButtons) {
+          blind.querySelectorAll('.sc-blind-button').forEach(function (button) {
+              button.onclick = function () {
+                  const command = this.dataset.command;
+                  
+                  let service = '';
+                  
+                  switch (command) {
+                    case 'up':
+                        service = !invertCommands ? 'open_cover' : 'close_cover';
+                        break;
+                        
+                    case 'down':
+                        service = !invertCommands ? 'close_cover' : 'open_cover';
+                        break;
+                  
+                    case 'stop':
+                        service = 'stop_cover';
+                        break;
+                  }
+                  
+                  hass.callService('cover', service, {
+                    entity_id: entityId
+                  });
+              };
+          });
+        }
       
         allBlinds.appendChild(blind);
       });
